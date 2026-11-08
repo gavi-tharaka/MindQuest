@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-accent="indigo">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MindQuest" />
+  <title>MindQuest — Gamified Habit RPG & Mindful Studio</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- RemixIcon -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+</head>
+<body>
+
+  <!-- AUTHENTICATION SCREEN -->
+  <section id="auth-view" class="auth-container">
+    <div class="auth-glow auth-glow-1"></div>
+    <div class="auth-glow auth-glow-2"></div>
+    <div class="auth-card">
+      <div class="logo-badge">
+        <i class="ri-sword-fill"></i>
+      </div>
+      <div class="auth-tag">HABIT RPG &amp; MINDFUL STUDIO</div>
+      <h1>MindQuest</h1>
+      <p>Level up your daily habits, beat the clock before deadlines expire, and express your mind through journals &amp; art.</p>
+
+      <div class="auth-features">
+        <div class="auth-feat"><i class="ri-timer-flash-line"></i><span>Live Countdown Quests &amp; Sub-tasks</span></div>
+        <div class="auth-feat"><i class="ri-calendar-check-line"></i><span>Smart Calendar &amp; Deadline Reminders</span></div>
+        <div class="auth-feat"><i class="ri-install-line"></i><span>Installable Web App (PWA)</span></div>
+      </div>
+
+      <button id="google-login-btn" class="btn-google">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18" />
+        <span>Continue with Google</span>
+        <i class="ri-arrow-right-line"></i>
+      </button>
+
+      <button id="demo-login-btn" class="btn-demo-mode" type="button">
+        <i class="ri-gamepad-line"></i> Try Instant Offline Demo Mode
+      </button>
+    </div>
+  </section>
+
+  <!-- MAIN APPLICATION VIEW -->
+  <div id="app-view" class="app-shell hidden">
+    <!-- Top Header (Includes Desktop 5-Tab Navigation) -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button id="open-drawer-btn" class="icon-btn" aria-label="Open Navigation Drawer" title="Side Menu">
+          <i class="ri-menu-2-line"></i>
+        </button>
+        <div class="brand-wrap">
+          <div class="brand-icon"><i class="ri-sword-fill"></i></div>
+          <div>
+            <div class="brand-title">MindQuest</div>
+            <div class="brand-clock" id="live-system-clock">--:--:--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESKTOP TOP NAVIGATION (5 TABS) -->
+      <nav class="desktop-tabs-nav" aria-label="Main Navigation">
+        <button type="button" class="main-nav-tab active" data-nav-tab="home">
+          <i class="ri-dashboard-3-line"></i><span>Home</span>
+        </button>
+        <button type="button" class="main-nav-tab" data-nav-tab="habits">
+          <i class="ri-calendar-check-line"></i><span>Habits</span>
+        </button>
+        <button type="button" class="main-nav-tab" data-nav-tab="tasks">
+          <i class="ri-flashlight-line"></i><span>Tasks</span>
+        </button>
+        <button type="button" class="main-nav-tab" data-nav-tab="journal">
+          <i class="ri-book-open-line"></i><span>Journal</span>
+        </button>
+        <button type="button" class="main-nav-tab" data-nav-tab="others">
+          <i class="ri-apps-2-line"></i><span>Others</span>
+        </button>
+      </nav>
+
+      <div class="top-bar-right">
+        <button id="theme-toggle-btn" class="icon-btn" title="Toggle Dark/Light Theme">
+          <i class="ri-moon-clear-line" id="theme-toggle-icon"></i>
+        </button>
+        <div class="points-pill" title="Available Quest Points">
+          <i class="ri-copper-diamond-fill"></i>
+          <span id="points-balance">0</span> <small>PTS</small>
+        </div>
+        <button id="header-profile-btn" class="header-avatar-btn" title="Profile & Settings">
+          <img id="header-user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="Avatar" />
+          <span class="status-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="dashboard">
+
+      <!-- ====================================================================
+           TAB 1: HOME (COMPACT DASHBOARD OVERVIEW)
+           ==================================================================== -->
+      <div id="tab-view-home" class="tab-view active">
+        <!-- COMPACT HERO PROFILE & LEVEL BANNER -->
+        <section class="hero-profile-card" id="hero-banner">
+          <div class="hero-top">
+            <div class="hero-avatar-wrap frame-cyber" id="hero-avatar-frame">
+              <img id="hero-avatar-img" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="Hero Avatar" class="hero-avatar" />
+              <span class="hero-level-badge" id="hero-level-badge">LV 1</span>
+            </div>
+            <div class="hero-details">
+              <div class="hero-title-row">
+                <h2 id="hero-display-name">Explorer</h2>
+                <span class="hero-class-pill" id="hero-class-badge"><i class="ri-magic-line"></i> Mindful Mage</span>
+              </div>
+              <p class="hero-bio" id="hero-bio-text">"Every small habit completed on time builds legendary discipline."</p>
+              <div class="xp-bar-container">
+                <div class="xp-bar-labels">
+                  <span id="xp-rank-label"><i class="ri-medal-fill"></i> Novice Adventurer</span>
+                  <span id="xp-progress-text">0 / 200 XP</span>
+                </div>
+                <div class="xp-track">
+                  <div class="xp-fill" id="xp-fill-bar" style="width: 5%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-quick-btns">
+              <button id="home-quick-journal-btn" class="btn-quick-journal">
+                <i class="ri-quill-pen-fill"></i>
+                <span>Quick Journal</span>
+              </button>
+              <button id="open-profile-modal-btn" class="btn-customize-profile">
+                <i class="ri-user-settings-line"></i>
+                <span>Profile</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-stats-grid">
+            <div class="stat-tile">
+              <i class="ri-fire-fill stat-icon flame"></i>
+              <div>
+                <strong id="stat-best-streak">0d</strong>
+                <small>Streak</small>
+              </div>
+            </div>
+            <div class="stat-tile">
+              <i class="ri-checkbox-circle-fill stat-icon emerald"></i>
+              <div>
+                <strong id="stat-today-progress">0/0</strong>
+                <small>Habits</small>
+              </div>
+            </div>
+            <div class="stat-tile">
+              <i class="ri-notification-3-fill stat-icon amber"></i>
+              <div>
+                <strong id="stat-reminders-count">0</strong>
+                <small>Reminders</small>
+              </div>
+            </div>
+            <div class="stat-tile">
+              <i class="ri-trophy-fill stat-icon purple"></i>
+              <div>
+                <strong id="stat-lifetime-pts">0</strong>
+                <small>Total XP</small>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HOME DASHBOARD: UNIFIED ACTIVE HABITS & TASKS (MINIMALIST VIEW) -->
+        <section class="card-section mt-12">
+          <div class="section-header">
+            <div class="section-title-group">
+              <div class="section-icon habit-icon"><i class="ri-flashlight-fill"></i></div>
+              <div>
+                <h2>Active Habits &amp; Tasks</h2>
+                <p class="section-sub">Sorted by nearest deadline • Click any item for description &amp; actions</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button type="button" class="btn-small" data-open-habit-modal>
+                <i class="ri-add-line"></i> Habit
+              </button>
+              <button type="button" class="btn-small" data-open-task-modal>
+                <i class="ri-add-line"></i> Task
+              </button>
+            </div>
+          </div>
+          <div id="home-active-quests-list" class="item-list compact-home-list"></div>
+        </section>
+
+        <!-- Upcoming Reminders on Home Dashboard -->
+        <section class="card-section mt-12">
+          <div class="section-header">
+            <div class="section-title-group">
+              <div class="section-icon reminder-sec-icon"><i class="ri-notification-3-fill"></i></div>
+              <div>
+                <h2>Upcoming Reminders</h2>
+                <p class="section-sub">Click a reminder to view description &amp; actions</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button type="button" id="home-add-reminder-btn" class="btn-small">
+                <i class="ri-add-line"></i> Reminder
+              </button>
+              <button type="button" id="home-manage-reminders-btn" class="btn-secondary btn-xs">
+                <i class="ri-calendar-event-line"></i> Calendar
+              </button>
+            </div>
+          </div>
+          <div id="home-reminders-list" class="item-list compact-home-list"></div>
+        </section>
+      </div>
+
+      <!-- ====================================================================
+           TAB 2: HABITS VIEW
+           ==================================================================== -->
+      <div id="tab-view-habits" class="tab-view hidden">
+        <section class="card-section">
+          <div class="section-header">
+            <div class="section-title-group">
+              <div class="section-icon habit-icon"><i class="ri-calendar-check-fill"></i></div>
+              <div>
+                <h2>Daily &amp; Recurring Habits</h2>
+                <p class="section-sub">Color-coded by priority • Sorted by nearest deadline, then highest priority</p>
+              </div>
+            </div>
+            <button id="open-habit-modal-btn" data-open-habit-modal class="btn-add-quest">
+              <i class="ri-add-line"></i> New Habit
+            </button>
+          </div>
+
+          <div class="priority-legend">
+            <span class="legend-item"><span class="legend-dot high"></span> High (1.5x)</span>
+            <span class="legend-item"><span class="legend-dot medium"></span> Medium (1.25x)</span>
+            <span class="legend-item"><span class="legend-dot low"></span> Low (1.0x)</span>
+            <span class="legend-item"><span class="legend-dot expired"></span> Expired</span>
+          </div>
+
+          <div class="filter-tabs" id="habit-filter-tabs">
+            <button type="button" class="filter-tab active" data-habit-filter="all">All Today</button>
+            <button type="button" class="filter-tab" data-habit-filter="active">Active</button>
+            <button type="button" class="filter-tab" data-habit-filter="done">Completed</button>
+            <button type="button" class="filter-tab" data-habit-filter="expired">Expired</button>
+          </div>
+
+          <div id="habits-list" class="item-list"></div>
+        </section>
+      </div>
+
+      <!-- ====================================================================
+           TAB 3: TASKS VIEW
+           ==================================================================== -->
+      <div id="tab-view-tasks" class="tab-view hidden">
+        <section class="card-section">
+          <div class="section-header">
+            <div class="section-title-group">
+              <div class="section-icon task-icon"><i class="ri-flashlight-fill"></i></div>
+              <div>
+                <h2>Action Tasks &amp; Sub-tasks</h2>
+                <p class="section-sub">Points by Priority (High: 50 • Medium: 30 • Low: 15) + Sub-task points</p>
+              </div>
+            </div>
+            <button id="open-task-modal-btn" data-open-task-modal class="btn-add-quest">
+              <i class="ri-add-line"></i> New Task
+            </button>
+          </div>
+
+          <div class="filter-tabs" id="task-filter-tabs">
+            <button type="button" class="filter-tab active" data-task-filter="pending">Active &amp; Pending</button>
+            <button type="button" class="filter-tab" data-task-filter="expired">Overdue / Expired</button>
+            <button type="button" class="filter-tab" data-task-filter="completed">Completed</button>
+          </div>
+
+          <div id="tasks-list" class="item-list"></div>
+        </section>
+      </div>
+
+      <!-- ====================================================================
+           TAB 4: JOURNAL VIEW
+           ==================================================================== -->
+      <div id="tab-view-journal" class="tab-view hidden">
+        <section class="card-section">
+          <div class="section-header">
+            <div class="section-title-group">
+              <div class="section-icon journal-sec-icon"><i class="ri-quill-pen-fill"></i></div>
+              <div>
+                <h2>Daily Journal &amp; Mindful Reflections</h2>
+                <p class="section-sub">Write thoughts, or optionally attach a photo or fullscreen drawing</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button id="open-journal-btn" class="btn-add-quest">
+                <i class="ri-edit-box-line"></i> Write Journal
+              </button>
+              <button id="open-canvas-btn" class="btn-secondary btn-xs">
+                <i class="ri-palette-line"></i> Art Studio
+              </button>
+            </div>
+          </div>
+          <div id="dashboard-journals-grid" class="journal-gallery-grid"></div>
+        </section>
+      </div>
+
+      <!-- ====================================================================
+           TAB 5: OTHERS VIEW (REMINDERS + CALENDAR, CATEGORIES, REWARDS, PROFILE)
+           ==================================================================== -->
+      <div id="tab-view-others" class="tab-view hidden">
+        <div class="others-subnav">
+          <button type="button" class="others-pill active" data-others-sec="reminders">
+            <i class="ri-calendar-event-fill"></i> Reminders &amp; Calendar
+          </button>
+          <button type="button" class="others-pill" data-others-sec="categories">
+            <i class="ri-price-tag-3-fill"></i> Categories
+          </button>
+          <button type="button" class="others-pill" data-others-sec="rewards">
+            <i class="ri-gift-2-fill"></i> Reward Store
+          </button>
+          <button type="button" class="others-pill" data-others-sec="profile">
+            <i class="ri-shield-user-fill"></i> Hero Profile
+          </button>
+        </div>
+
+        <!-- OTHERS SECTION 1: REMINDERS & INTERACTIVE CALENDAR PREVIEW -->
+        <div id="others-sec-reminders" class="others-panel">
+          <div class="quests-grid">
+            <!-- Interactive Calendar Card -->
+            <section class="card-section">
+              <div class="section-header">
+                <div class="section-title-group">
+                  <div class="section-icon reminder-sec-icon"><i class="ri-calendar-2-fill"></i></div>
+                  <div>
+                    <h2 id="calendar-month-label">Month Year</h2>
+                    <p class="section-sub">Click a date to preview scheduled reminders &amp; tasks</p>
+                  </div>
+                </div>
+                <div style="display:flex;gap:4px;">
+                  <button type="button" id="cal-prev-btn" class="icon-btn" title="Previous Month"><i class="ri-arrow-left-s-line"></i></button>
+                  <button type="button" id="cal-today-btn" class="btn-small">Today</button>
+                  <button type="button" id="cal-next-btn" class="icon-btn" title="Next Month"><i class="ri-arrow-right-s-line"></i></button>
+                </div>
+              </div>
+
+              <div class="calendar-weekdays">
+                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+              </div>
+              <div id="calendar-days-grid" class="calendar-days-grid"></div>
+
+              <div class="calendar-selected-preview mt-12">
+                <div class="section-header" style="margin-bottom:6px;">
+                  <strong id="selected-date-heading" style="font-size:13px;">Selected Date Preview</strong>
+                  <span class="badge badge-Low" id="selected-date-count">0 items</span>
+                </div>
+                <div id="calendar-date-items" class="item-list compact"></div>
+              </div>
+            </section>
+
+            <!-- Create Reminder -->
+            <section class="card-section">
+              <div class="section-header">
+                <div class="section-title-group">
+                  <div class="section-icon habit-icon"><i class="ri-notification-badge-fill"></i></div>
+                  <div>
+                    <h2>Schedule New Reminder</h2>
+                    <p class="section-sub">Manage personal reminders with countdowns</p>
+                  </div>
+                </div>
+              </div>
+
+              <form id="reminder-form">
+                <label class="field-label">Reminder Title</label>
+                <input type="text" id="reminder-title" required maxlength="150" placeholder="e.g., Pay electricity bill / Evening Yoga" />
+
+                <label class="field-label">Description (Optional)</label>
+                <textarea id="reminder-description" rows="2" maxlength="500" placeholder="Add notes, links, or details for this reminder..."></textarea>
+
+                <div class="grid-2">
+                  <div>
+                    <label class="field-label">Date &amp; Time</label>
+                    <input type="datetime-local" id="reminder-datetime" required />
+                  </div>
+                  <div>
+                    <label class="field-label">Category</label>
+                    <select id="reminder-category-select" class="category-dropdown"></select>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-primary full-width mt-12">
+                  <i class="ri-notification-3-line"></i> Add Reminder
+                </button>
+              </form>
+
+              <h3 style="font-size:13px;margin:16px 0 8px;">All Scheduled Reminders</h3>
+              <div id="others-reminders-list" class="item-list compact"></div>
+            </section>
+          </div>
+        </div>
+
+        <!-- OTHERS SECTION 2: CATEGORIES MANAGER -->
+        <div id="others-sec-categories" class="others-panel hidden">
+          <div class="quests-grid">
+            <section class="card-section">
+              <div class="section-header">
+                <div class="section-title-group">
+                  <div class="section-icon habit-icon"><i class="ri-price-tag-3-fill"></i></div>
+                  <div>
+                    <h2 id="category-form-title">Create Category</h2>
+                    <p class="section-sub">Add or edit categories with icons for your Habits &amp; Tasks</p>
+                  </div>
+                </div>
+              </div>
+
+              <form id="category-form">
+                <label class="field-label">Category Name</label>
+                <input type="text" id="category-name-input" required maxlength="40" placeholder="e.g., Mindfulness, Fitness, Coding..." />
+
+                <label class="field-label">Choose Category Icon</label>
+                <div class="icon-picker-grid" id="category-icon-picker">
+                  <button type="button" class="icon-pick-btn active" data-icon="ri-mental-health-fill"><i class="ri-mental-health-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-heart-pulse-fill"><i class="ri-heart-pulse-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-book-read-fill"><i class="ri-book-read-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-briefcase-4-fill"><i class="ri-briefcase-4-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-code-s-slash-fill"><i class="ri-code-s-slash-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-run-fill"><i class="ri-run-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-cup-fill"><i class="ri-cup-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-money-dollar-circle-fill"><i class="ri-money-dollar-circle-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-music-2-fill"><i class="ri-music-2-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-plant-fill"><i class="ri-plant-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-moon-clear-fill"><i class="ri-moon-clear-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-home-heart-fill"><i class="ri-home-heart-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-gamepad-fill"><i class="ri-gamepad-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-graduation-cap-fill"><i class="ri-graduation-cap-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-lightbulb-flash-fill"><i class="ri-lightbulb-flash-fill"></i></button>
+                  <button type="button" class="icon-pick-btn" data-icon="ri-compass-3-fill"><i class="ri-compass-3-fill"></i></button>
+                </div>
+
+                <label class="field-label">Category Color Accent</label>
+                <div class="palette mt-8" id="category-color-picker">
+                  <button type="button" class="cat-color-swatch active" data-cat-color="#4f46e5" style="background:#4f46e5"></button>
+                  <button type="button" class="cat-color-swatch" data-cat-color="#10b981" style="background:#10b981"></button>
+                  <button type="button" class="cat-color-swatch" data-cat-color="#f59e0b" style="background:#f59e0b"></button>
+                  <button type="button" class="cat-color-swatch" data-cat-color="#e11d48" style="background:#e11d48"></button>
+                  <button type="button" class="cat-color-swatch" data-cat-color="#06b6d4" style="background:#06b6d4"></button>
+                  <button type="button" class="cat-color-swatch" data-cat-color="#8b5cf6" style="background:#8b5cf6"></button>
+                </div>
+
+                <div style="display:flex;gap:8px;" class="mt-12">
+                  <button type="submit" id="category-submit-btn" class="btn-primary full-width">
+                    <i class="ri-add-circle-line"></i> Save Category
+                  </button>
+                  <button type="button" id="category-cancel-edit-btn" class="btn-secondary hidden">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <section class="card-section">
+              <div class="section-header">
+                <div class="section-title-group">
+                  <div class="section-icon task-icon"><i class="ri-folders-fill"></i></div>
+                  <div>
+                    <h2>Active Categories</h2>
+                    <p class="section-sub">Used in Habit, Task, and Reminder dropdowns</p>
+                  </div>
+                </div>
+              </div>
+              <div id="categories-manage-list" class="item-list"></div>
+            </section>
+          </div>
+        </div>
+
+        <!-- OTHERS SECTION 3: REWARDS STORE & MANAGER -->
+        <div id="others-sec-rewards" class="others-panel hidden">
+          <section class="card-section">
+            <div class="section-header">
+              <div class="section-title-group">
+                <div class="section-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b;"><i class="ri-gift-2-fill"></i></div>
+                <div>
+                  <h2>Reward Store Management</h2>
+                  <p class="section-sub">Create custom rewards, redeem with quest points, or delete old rewards</p>
+                </div>
+              </div>
+            </div>
+
+            <form id="others-reward-form" class="inline-form" style="max-width:500px;">
+              <input type="text" id="others-reward-title" placeholder="Reward Title (e.g. Movie Night)" required maxlength="100" />
+              <input type="number" id="others-reward-cost" placeholder="Pts" required min="1" max="100000" />
+              <button type="submit" class="btn-primary" title="Add Reward"><i class="ri-add-line"></i></button>
+            </form>
+
+            <div id="others-rewards-list" class="item-list mt-12"></div>
+          </section>
+        </div>
+
+        <!-- OTHERS SECTION 4: PROFILE CUSTOMIZATION -->
+        <div id="others-sec-profile" class="others-panel hidden">
+          <section class="card-section">
+            <div class="section-header">
+              <div class="section-title-group">
+                <div class="section-icon habit-icon"><i class="ri-shield-user-fill"></i></div>
+                <div>
+                  <h2>Hero Profile Customization</h2>
+                  <p class="section-sub">Personalize your avatar, RPG class, frame aura, and theme</p>
+                </div>
+              </div>
+              <button type="button" id="others-open-profile-modal-btn" class="btn-primary btn-xs">
+                <i class="ri-edit-2-line"></i> Edit Profile
+              </button>
+            </div>
+            <div id="others-profile-summary" class="profile-preview-banner"></div>
+          </section>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- MOBILE BOTTOM 5-TAB BAR -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+      <button type="button" class="mobile-nav-tab active" data-nav-tab="home">
+        <i class="ri-dashboard-3-line"></i><span>Home</span>
+      </button>
+      <button type="button" class="mobile-nav-tab" data-nav-tab="habits">
+        <i class="ri-calendar-check-line"></i><span>Habits</span>
+      </button>
+      <button type="button" class="mobile-nav-tab" data-nav-tab="tasks">
+        <i class="ri-flashlight-line"></i><span>Tasks</span>
+      </button>
+      <button type="button" class="mobile-nav-tab" data-nav-tab="journal">
+        <i class="ri-book-open-line"></i><span>Journal</span>
+      </button>
+      <button type="button" class="mobile-nav-tab" data-nav-tab="others">
+        <i class="ri-apps-2-line"></i><span>Others</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- NAVIGATION DRAWER (Side Menu) -->
+  <div id="drawer-overlay" class="drawer-overlay hidden">
+    <aside class="drawer">
+      <div class="drawer-header">
+        <div class="user-info">
+          <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="Avatar" class="avatar" />
+          <div>
+            <strong id="user-name">Explorer</strong>
+            <small id="lifetime-points">Lifetime: 0 pts</small>
+          </div>
+        </div>
+        <button id="close-drawer-btn" class="icon-btn" aria-label="Close Drawer"><i class="ri-close-line"></i></button>
+      </div>
+
+      <div class="drawer-body">
+        <button id="drawer-customize-profile-btn" class="btn-secondary full-width btn-xs" style="justify-content:center;">
+          <i class="ri-user-star-line"></i> Edit Hero Profile
+        </button>
+
+        <!-- Reward Store in Drawer -->
+        <div class="drawer-section">
+          <div class="section-header">
+            <h3><i class="ri-gift-2-fill" style="color:#f59e0b"></i> Reward Store</h3>
+          </div>
+          <form id="reward-form" class="inline-form">
+            <input type="text" id="reward-title" placeholder="Reward (e.g. Gaming 1h)" required maxlength="100" />
+            <input type="number" id="reward-cost" placeholder="Pts" required min="1" max="100000" />
+            <button type="submit" class="btn-primary" title="Add Reward"><i class="ri-add-line"></i></button>
+          </form>
+          <div id="rewards-list" class="item-list compact"></div>
+        </div>
+
+        <!-- Recent Journal Entries in Drawer -->
+        <div class="drawer-section">
+          <h3><i class="ri-book-open-fill" style="color:#6366f1"></i> Recent Journals</h3>
+          <div id="journals-list" class="item-list compact"></div>
+        </div>
+      </div>
+
+      <div class="drawer-footer">
+        <button id="logout-btn" class="btn-danger-outline full-width">
+          <i class="ri-logout-box-r-line"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- MODAL: CUSTOMIZE HERO PROFILE -->
+  <div id="profile-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-md">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="ri-shield-user-fill modal-header-icon"></i>
+          <h3>Customize Hero Profile</h3>
+        </div>
+        <button data-close-modal="profile-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+
+      <form id="profile-form">
+        <div class="profile-preview-banner">
+          <div class="hero-avatar-wrap frame-cyber" id="preview-avatar-frame">
+            <img id="preview-avatar-img" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="Preview" class="hero-avatar" />
+          </div>
+          <div>
+            <strong id="preview-profile-name">Explorer</strong>
+            <span class="hero-class-pill" id="preview-profile-class">Mindful Mage</span>
+            <p class="small-muted" id="preview-profile-bio">Customize your identity &amp; theme</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label class="field-label" for="profile-name-input"><i class="ri-user-3-line"></i> Hero Display Name</label>
+            <input type="text" id="profile-name-input" required maxlength="40" placeholder="Enter your hero name" />
+          </div>
+          <div>
+            <label class="field-label" for="profile-class-select"><i class="ri-sword-line"></i> Hero Class / Title</label>
+            <select id="profile-class-select">
+              <option value="Mindful Mage">🧙‍♂️ Mindful Mage</option>
+              <option value="Cyber Samurai">⚔️ Cyber Samurai</option>
+              <option value="Shadow Ninja">🥷 Shadow Ninja</option>
+              <option value="Productivity Paladin">🛡️ Productivity Paladin</option>
+              <option value="Zen Alchemist">🧪 Zen Alchemist</option>
+              <option value="Astral Ranger">🏹 Astral Ranger</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="field-label" for="profile-bio-input"><i class="ri-double-quotes-l"></i> Personal Mantra / Bio</label>
+        <input type="text" id="profile-bio-input" maxlength="120" placeholder="e.g., Discipline is choosing between what you want now and what you want most." />
+
+        <label class="field-label"><i class="ri-emotion-happy-line"></i> Choose Preset Avatar or Upload Photo</label>
+        <div class="avatar-presets-grid" id="avatar-presets-grid">
+          <button type="button" class="avatar-preset-btn active" data-avatar-url="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="Felix" />
+          </button>
+          <button type="button" class="avatar-preset-btn" data-avatar-url="https://api.dicebear.com/7.x/adventurer/svg?seed=Aria">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Aria" alt="Aria" />
+          </button>
+          <button type="button" class="avatar-preset-btn" data-avatar-url="https://api.dicebear.com/7.x/bottts/svg?seed=CyberKnight">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=CyberKnight" alt="Bot" />
+          </button>
+          <button type="button" class="avatar-preset-btn" data-avatar-url="https://api.dicebear.com/7.x/lorelei/svg?seed=Nova">
+            <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Nova" alt="Nova" />
+          </button>
+          <button type="button" class="avatar-preset-btn" data-avatar-url="https://api.dicebear.com/7.x/adventurer/svg?seed=Kaizen">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Kaizen" alt="Kaizen" />
+          </button>
+          <button type="button" class="avatar-preset-btn" data-avatar-url="https://api.dicebear.com/7.x/fun-emoji/svg?seed=Star">
+            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=Star" alt="Star" />
+          </button>
+        </div>
+
+        <div class="avatar-upload-bar">
+          <label for="profile-avatar-file" class="btn-secondary upload-label-btn">
+            <i class="ri-upload-cloud-2-line"></i> Upload Photo
+          </label>
+          <input type="file" id="profile-avatar-file" accept="image/*" class="hidden" />
+          <span id="profile-upload-status" class="small-muted">Or select an RPG avatar above</span>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label class="field-label" for="profile-frame-select"><i class="ri-focus-2-line"></i> Avatar Frame Aura</label>
+            <select id="profile-frame-select">
+              <option value="frame-cyber">⚡ Neon Cyber Glow</option>
+              <option value="frame-gold">👑 Royal Gold Crown</option>
+              <option value="frame-emerald">🌿 Emerald Spirit</option>
+              <option value="frame-flame">🔥 Crimson Flame</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="profile-accent-select"><i class="ri-palette-line"></i> App Theme Accent</label>
+            <select id="profile-accent-select">
+              <option value="indigo">🔮 Indigo Quest</option>
+              <option value="emerald">🌲 Emerald Forest</option>
+              <option value="rose">🌹 Rose Crimson</option>
+              <option value="amber">☀️ Solar Amber</option>
+              <option value="cyan">💎 Cyber Cyan</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary full-width mt-12">
+          <i class="ri-save-3-line"></i> Save Profile Customization
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: JOURNAL + MOOD + OPTIONAL IMAGE UPLOAD OR DRAWING CANVAS -->
+  <div id="journal-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="ri-quill-pen-fill modal-header-icon"></i>
+          <h3 id="journal-modal-title">Write Daily Journal</h3>
+        </div>
+        <button data-close-modal="journal-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+
+      <form id="journal-form">
+        <label class="field-label"><i class="ri-heart-pulse-line"></i> How are you feeling today?</label>
+        <div class="mood-selector" id="mood-selector">
+          <button type="button" data-mood="great" class="mood-btn">🤩<span>Great</span></button>
+          <button type="button" data-mood="good" class="mood-btn active">🙂<span>Good</span></button>
+          <button type="button" data-mood="okay" class="mood-btn">😐<span>Okay</span></button>
+          <button type="button" data-mood="low" class="mood-btn">😔<span>Low</span></button>
+          <button type="button" data-mood="stressed" class="mood-btn">😫<span>Stressed</span></button>
+        </div>
+
+        <label class="field-label" for="journal-content"><i class="ri-edit-2-line"></i> Daily Thoughts &amp; Story</label>
+        <textarea id="journal-content" rows="4" placeholder="Write your thoughts, wins, or reflections for today..."></textarea>
+
+        <!-- OPTIONAL Visual Attachment Switcher: Default is NONE -->
+        <div class="media-mode-header">
+          <label class="field-label" style="margin:0"><i class="ri-attachment-2"></i> Add Image or Drawing (Optional)</label>
+          <div class="media-mode-tabs">
+            <button type="button" class="media-tab active" data-journal-media="none" id="tab-btn-none">
+              <i class="ri-text"></i> Text Only
+            </button>
+            <button type="button" class="media-tab" data-journal-media="draw" id="tab-btn-draw">
+              <i class="ri-brush-3-line"></i> Draw &amp; Color
+            </button>
+            <button type="button" class="media-tab" data-journal-media="upload" id="tab-btn-upload">
+              <i class="ri-image-add-line"></i> Upload Image
+            </button>
+          </div>
+        </div>
+
+        <!-- OPTION: IMAGE UPLOAD PANEL -->
+        <div id="journal-upload-panel" class="upload-panel hidden">
+          <div class="upload-dropzone" id="journal-dropzone">
+            <input type="file" id="journal-image-input" accept="image/*" class="hidden" />
+            <div id="upload-empty-state" class="upload-empty">
+              <div class="upload-icon-circle"><i class="ri-upload-cloud-2-fill"></i></div>
+              <strong>Click to Upload Image or Drag &amp; Drop</strong>
+              <small>Supports PNG, JPG, WEBP</small>
+              <button type="button" id="trigger-file-select-btn" class="btn-small mt-8">
+                <i class="ri-folder-image-line"></i> Browse Photo
+              </button>
+            </div>
+
+            <div id="upload-preview-state" class="upload-preview-wrap hidden">
+              <img id="uploaded-image-preview" src="" alt="Uploaded preview" />
+              <div class="upload-preview-actions">
+                <button type="button" id="send-upload-to-canvas-btn" class="btn-small">
+                  <i class="ri-palette-line"></i> Open in Canvas to Color / Paint
+                </button>
+                <button type="button" id="remove-uploaded-img-btn" class="btn-danger-small">
+                  <i class="ri-delete-bin-6-line"></i> Remove Photo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OPTION: ART & COLORING CANVAS STUDIO -->
+        <div id="canvas-studio-wrapper" class="canvas-studio-wrapper hidden">
+          <div class="studio-top-bar">
+            <div class="studio-title">
+              <i class="ri-palette-fill"></i>
+              <span>Art &amp; Coloring Studio</span>
+              <small class="studio-hint">(Use Fill <i class="ri-paint-fill"></i> to color shapes)</small>
+            </div>
+            <div class="studio-top-actions">
+              <button type="button" id="toggle-fullscreen-canvas-btn" class="btn-studio-fs" title="Toggle Fullscreen Mode">
+                <i class="ri-fullscreen-line"></i> Fullscreen
+              </button>
+              <button type="button" id="close-fullscreen-studio-btn" class="btn-primary btn-done-fs">
+                <i class="ri-check-double-line"></i> Done Drawing
+              </button>
+            </div>
+          </div>
+
+          <div class="canvas-toolbar">
+            <div class="tool-group" role="group" aria-label="Drawing and Coloring Tools">
+              <button type="button" class="tool-btn active" data-canvas-tool="pen" title="Fine Pen">
+                <i class="ri-pencil-fill"></i><span>Pen</span>
+              </button>
+              <button type="button" class="tool-btn" data-canvas-tool="marker" title="Coloring Marker">
+                <i class="ri-mark-pen-fill"></i><span>Marker</span>
+              </button>
+              <button type="button" class="tool-btn" data-canvas-tool="bucket" title="Paint Bucket Fill">
+                <i class="ri-paint-fill"></i><span>Fill</span>
+              </button>
+              <button type="button" class="tool-btn" data-canvas-tool="airbrush" title="Spray / Airbrush">
+                <i class="ri-contrast-drop-2-fill"></i><span>Spray</span>
+              </button>
+              <button type="button" class="tool-btn" data-canvas-tool="line" title="Straight Line">
+                <i class="ri-subtract-line"></i><span>Line</span>
+              </button>
+              <button type="button" class="tool-btn" data-canvas-tool="rect" title="Rectangle Shape">
+                <i class="ri-rectangle-line"></i><span>Box</span>
+              </button>
+              <button type="button" class="tool-btn" data-canvas-tool="circle" title="Circle Shape">
+                <i class="ri-checkbox-blank-circle-line"></i><span>Circle</span>
+              </button>
+              <button type="button" class="tool-btn eraser-btn" data-canvas-tool="eraser" title="Eraser">
+                <i class="ri-eraser-fill"></i><span>Erase</span>
+              </button>
+            </div>
+
+            <div class="canvas-history-controls">
+              <button type="button" id="canvas-undo-btn" class="icon-tool-btn" title="Undo" disabled>
+                <i class="ri-arrow-go-back-line"></i>
+              </button>
+              <button type="button" id="canvas-redo-btn" class="icon-tool-btn" title="Redo" disabled>
+                <i class="ri-arrow-go-forward-line"></i>
+              </button>
+              <button type="button" id="download-canvas-btn" class="icon-tool-btn" title="Download PNG">
+                <i class="ri-download-2-line"></i>
+              </button>
+              <button type="button" id="clear-canvas-btn" class="btn-danger-small" title="Clear All">
+                <i class="ri-delete-bin-line"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="canvas-color-bar">
+            <div class="palette" id="color-palette">
+              <button type="button" class="color-swatch active" data-color="#1e293b" style="background:#1e293b"></button>
+              <button type="button" class="color-swatch" data-color="#ef4444" style="background:#ef4444"></button>
+              <button type="button" class="color-swatch" data-color="#f97316" style="background:#f97316"></button>
+              <button type="button" class="color-swatch" data-color="#facc15" style="background:#facc15"></button>
+              <button type="button" class="color-swatch" data-color="#22c55e" style="background:#22c55e"></button>
+              <button type="button" class="color-swatch" data-color="#06b6d4" style="background:#06b6d4"></button>
+              <button type="button" class="color-swatch" data-color="#3b82f6" style="background:#3b82f6"></button>
+              <button type="button" class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6"></button>
+              <button type="button" class="color-swatch" data-color="#ec4899" style="background:#ec4899"></button>
+              <button type="button" class="color-swatch" data-color="#fda4af" style="background:#fda4af"></button>
+              <button type="button" class="color-swatch" data-color="#a16207" style="background:#a16207"></button>
+              <button type="button" class="color-swatch" data-color="#ffffff" style="background:#ffffff;border:1px solid #cbd5e1"></button>
+              <label class="custom-color-label" title="Custom Color Picker">
+                <input type="color" id="custom-color-picker" value="#4f46e5" />
+                <i class="ri-sip-line"></i>
+              </label>
+            </div>
+
+            <div class="brush-size-control">
+              <i class="ri-drop-line"></i>
+              <input type="range" id="brush-size" min="2" max="36" value="5" />
+              <span id="brush-size-label">5px</span>
+            </div>
+
+            <div class="paper-bg-selector">
+              <small>Paper:</small>
+              <button type="button" class="paper-btn active" data-paper-bg="#ffffff" style="background:#ffffff"></button>
+              <button type="button" class="paper-btn" data-paper-bg="#fefce8" style="background:#fefce8"></button>
+              <button type="button" class="paper-btn" data-paper-bg="#f0fdf4" style="background:#f0fdf4"></button>
+              <button type="button" class="paper-btn" data-paper-bg="#eff6ff" style="background:#eff6ff"></button>
+            </div>
+          </div>
+
+          <div class="canvas-stage">
+            <canvas id="drawing-canvas" width="800" height="440"></canvas>
+          </div>
+        </div>
+
+        <button type="submit" id="journal-submit-btn" class="btn-primary full-width mt-12">
+          <i class="ri-check-line"></i> Save Journal Entry
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE / EDIT HABIT -->
+  <div id="habit-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="ri-calendar-check-fill modal-header-icon"></i>
+          <h3 id="habit-modal-title">New Recurring Habit</h3>
+        </div>
+        <button data-close-modal="habit-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+      <form id="habit-form">
+        <label class="field-label">Habit Title</label>
+        <input type="text" id="habit-title" required maxlength="200" placeholder="e.g., 15m Mindful Meditation" />
+
+        <label class="field-label">Description (Optional)</label>
+        <textarea id="habit-description" rows="2" maxlength="500" placeholder="Add details, instructions, or motivation for this habit..."></textarea>
+
+        <div class="grid-2">
+          <div>
+            <label class="field-label">Category</label>
+            <select id="habit-category-select" class="category-dropdown"></select>
+          </div>
+          <div>
+            <label class="field-label">Daily Deadline Time</label>
+            <input type="time" id="habit-deadline-time" required value="21:00" />
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label class="field-label">Frequency</label>
+            <select id="habit-frequency">
+              <option value="daily">Every Day</option>
+              <option value="weekly">Specific Days</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Priority (Color &amp; Multiplier)</label>
+            <select id="habit-priority">
+              <option value="High">🔴 High (1.5x pts)</option>
+              <option value="Medium" selected>🟠 Medium (1.25x pts)</option>
+              <option value="Low">🔵 Low (1.0x pts)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="habit-days-wrapper" class="days-picker hidden">
+          <label><input type="checkbox" value="0" checked /> Sun</label>
+          <label><input type="checkbox" value="1" checked /> Mon</label>
+          <label><input type="checkbox" value="2" checked /> Tue</label>
+          <label><input type="checkbox" value="3" checked /> Wed</label>
+          <label><input type="checkbox" value="4" checked /> Thu</label>
+          <label><input type="checkbox" value="5" checked /> Fri</label>
+          <label><input type="checkbox" value="6" checked /> Sat</label>
+        </div>
+
+        <label class="field-label">Custom Base Points</label>
+        <input type="number" id="habit-points" value="20" min="5" max="1000" required />
+
+        <button type="submit" id="habit-submit-btn" class="btn-primary full-width mt-12">
+          <i class="ri-add-circle-line"></i> Create Habit Quest
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE / EDIT TASK -->
+  <div id="task-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-md">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="ri-flashlight-fill modal-header-icon"></i>
+          <h3 id="task-modal-title">New Action Task</h3>
+        </div>
+        <button data-close-modal="task-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+      <form id="task-form">
+        <label class="field-label">Task Title</label>
+        <input type="text" id="task-title" required maxlength="200" placeholder="e.g., Complete client presentation" />
+
+        <label class="field-label">Description (Optional)</label>
+        <textarea id="task-description" rows="2" maxlength="500" placeholder="Add task details, steps, or notes..."></textarea>
+
+        <div class="grid-2">
+          <div>
+            <label class="field-label">Category</label>
+            <select id="task-category-select" class="category-dropdown"></select>
+          </div>
+          <div>
+            <label class="field-label">Priority (Determines Task Points)</label>
+            <select id="task-priority">
+              <option value="High">🔴 High — 50 Points</option>
+              <option value="Medium" selected>🟠 Medium — 30 Points</option>
+              <option value="Low">🔵 Low — 15 Points</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- HOW MUCH TIME NEEDED? (5m, 15m, 30m, 1h, 3h, Other) -->
+        <label class="field-label"><i class="ri-timer-flash-line"></i> How much time needed? (Deadline Duration)</label>
+        <div class="duration-presets" id="task-duration-presets">
+          <button type="button" class="duration-pill" data-duration="5">5 Min</button>
+          <button type="button" class="duration-pill" data-duration="15">15 Min</button>
+          <button type="button" class="duration-pill active" data-duration="30">30 Min</button>
+          <button type="button" class="duration-pill" data-duration="60">1 Hour</button>
+          <button type="button" class="duration-pill" data-duration="180">3 Hours</button>
+          <button type="button" class="duration-pill" data-duration="other">Other (Date &amp; Time)</button>
+        </div>
+
+        <div id="task-custom-datetime-wrap" class="grid-2 mt-8 hidden">
+          <div>
+            <label class="field-label">Select Date</label>
+            <input type="date" id="task-custom-date" />
+          </div>
+          <div>
+            <label class="field-label">Select Time</label>
+            <input type="time" id="task-custom-time" />
+          </div>
+        </div>
+
+        <!-- SUB-TASKS / SUB-CATEGORIES SECTION -->
+        <div class="subtasks-builder mt-12">
+          <div class="section-header" style="margin-bottom:6px;">
+            <div>
+              <strong style="font-size:12.5px;"><i class="ri-git-branch-line"></i> Sub-tasks / Parts (Optional)</strong>
+              <p class="small-muted">Each part awards separate points and has its own timer</p>
+            </div>
+            <button type="button" id="add-subtask-row-btn" class="btn-small">
+              <i class="ri-add-line"></i> + Add Part
+            </button>
+          </div>
+          <div id="subtasks-rows-container" class="subtasks-rows-container"></div>
+        </div>
+
+        <button type="submit" id="task-submit-btn" class="btn-primary full-width mt-12">
+          <i class="ri-add-circle-line"></i> Start Task Quest
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE / EDIT REMINDER -->
+  <div id="reminder-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="ri-notification-3-fill modal-header-icon"></i>
+          <h3 id="reminder-modal-title">Schedule Reminder</h3>
+        </div>
+        <button data-close-modal="reminder-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+      <form id="reminder-modal-form">
+        <label class="field-label">Reminder Title</label>
+        <input type="text" id="reminder-modal-title-input" required maxlength="150" placeholder="e.g., Pay electricity bill / Evening Yoga" />
+
+        <label class="field-label">Description (Optional)</label>
+        <textarea id="reminder-modal-description" rows="2" maxlength="500" placeholder="Add notes or details for this reminder..."></textarea>
+
+        <div class="grid-2">
+          <div>
+            <label class="field-label">Date &amp; Time</label>
+            <input type="datetime-local" id="reminder-modal-datetime" required />
+          </div>
+          <div>
+            <label class="field-label">Category</label>
+            <select id="reminder-modal-category" class="category-dropdown"></select>
+          </div>
+        </div>
+
+        <button type="submit" id="reminder-modal-submit-btn" class="btn-primary full-width mt-12">
+          <i class="ri-save-3-line"></i> Save Reminder
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT REWARD -->
+  <div id="reward-edit-modal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:400px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="ri-gift-2-fill modal-header-icon"></i>
+          <h3>Edit Reward</h3>
+        </div>
+        <button data-close-modal="reward-edit-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+      <form id="reward-edit-form">
+        <label class="field-label">Reward Title</label>
+        <input type="text" id="reward-edit-title" required maxlength="100" />
+        <label class="field-label">Cost (Points)</label>
+        <input type="number" id="reward-edit-cost" required min="1" max="100000" />
+        <button type="submit" class="btn-primary full-width mt-12">
+          <i class="ri-save-3-line"></i> Update Reward
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ITEM DETAILS POPUP (ON HOME CLICK) -->
+  <div id="item-detail-modal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div id="detail-modal-cat-icon" class="home-cat-icon" style="width:32px;height:32px;font-size:16px;"></div>
+          <div>
+            <small id="detail-modal-type" class="small-muted" style="font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Quest Details</small>
+            <h3 id="detail-modal-title" style="font-size:16px;line-height:1.25;">Item Title</h3>
+          </div>
+        </div>
+        <button data-close-modal="item-detail-modal" class="icon-btn"><i class="ri-close-line"></i></button>
+      </div>
+
+      <div id="detail-modal-body" class="detail-popup-body"></div>
+
+      <div id="detail-modal-actions" class="detail-popup-actions mt-16"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRMATION DIALOG -->
+  <div id="confirm-modal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:380px;text-align:center;">
+      <div class="confirm-icon-wrap">
+        <i class="ri-error-warning-fill"></i>
+      </div>
+      <h3 id="confirm-modal-title" style="margin-bottom:6px;font-size:16px;">Confirm Delete</h3>
+      <p id="confirm-modal-desc" class="small-muted" style="margin-bottom:16px;">
+        Are you sure you want to delete this item? This action cannot be undone.
+      </p>
+      <div class="grid-2">
+        <button type="button" id="confirm-cancel-btn" class="btn-secondary">Cancel</button>
+        <button type="button" id="confirm-accept-btn" class="btn-danger-solid">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js?v=5"></script>
+</body>
+</html>

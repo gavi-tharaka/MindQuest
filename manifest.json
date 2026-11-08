@@ -1,0 +1,19 @@
+{
+  "name": "MindQuest — Gamified Habit Tracker",
+  "short_name": "MindQuest",
+  "description": "Gamified habit tracker, action tasks, reminders, and mindful journal.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0f19",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
